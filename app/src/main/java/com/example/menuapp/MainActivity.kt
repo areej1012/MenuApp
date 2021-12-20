@@ -1,33 +1,38 @@
 package com.example.menuapp
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.example.menuapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+    lateinit var sharedPreferences : SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreferences = this.getSharedPreferences("share", Context.MODE_PRIVATE)
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return true
+    fun shareIntent(view: View) {
+        val intent = Intent(this, Home :: class.java)
+        intent.putExtra("text", binding.etText1.text.toString())
+        startActivity(intent)
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.Home -> startActivity(Intent(this,Home::class.java))
-            R.id.About -> startActivity(Intent(this,About::class.java))
-            R.id.Help -> startActivity(Intent(this,Help::class.java))
+    fun saveData(view: View) {
+        val text = binding.etText2.text.toString()
+        with(sharedPreferences.edit()){
+            putString("saveText",text)
+            apply()
         }
-
-        return super.onOptionsItemSelected(item)
     }
+
+
 }
